@@ -15,25 +15,36 @@ main = scotty 3000 $ do
 
 saveJsonDocumentHandler :: ActionM ()
 saveJsonDocumentHandler = do
+    -- Get the content of the request body as an utf-8 encoded Lazy.Text.
     content <- fmap decodeUtf8 body
+    -- Create a JSON document with the given content, returns a key.
     key <- liftAndCatchIO (JSONStore.create content)
+    -- Set the response body to text containing the key.
     text (pack key)
 
 
 getJsonDocumentHandler :: ActionM ()
 getJsonDocumentHandler = do
+    -- Get the route parameter named "key".
     key <- param "key"
+    -- Fetch the content of the JSON document that corresponds to the given key.
     content <- liftAndCatchIO $ JSONStore.fetch key
+    -- Return the content as a string, or pass the request to the next handler (404).
     maybe next text content
 
 
 updateJsonDocumentHandler :: ActionM ()
 updateJsonDocumentHandler = do
+    -- Get the route parameter named "key".
     key <- param "key"
+    -- Get the content of the request body as an utf-8 encoded Lazy.Text.
     content <- fmap decodeUtf8 body
+    -- Update the JSON document using the content of the request.
     succeeded <- liftAndCatchIO $ JSONStore.update key content
     if succeeded
         then
+            -- If the update succeeded, return an empty string response.
             text ""
         else
+            -- If the update failed, pass the request to the next handler (404).
             next

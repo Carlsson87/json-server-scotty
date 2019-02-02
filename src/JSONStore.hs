@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module JSONStore (fetch, create, update) where
 
 import Data.Text.Lazy.IO as LTIO
