@@ -20,8 +20,9 @@ saveJsonDocumentHandler = do
     content <- fmap decodeUtf8 body
     -- Create a JSON document with the given content, returns a key.
     key <- liftAndCatchIO (JSONStore.create content)
-    -- Set the response body to text containing the key.
+    -- Set the response status to 201.
     status status201
+    -- Set the response body to text containing the key.
     text (pack key)
 
 
@@ -45,8 +46,8 @@ updateJsonDocumentHandler = do
     succeeded <- liftAndCatchIO $ JSONStore.update key content
     if succeeded
         then
-            -- If the update succeeded, return an empty string response.
-            text ""
+            -- Response with status 204.
+            status status204
         else
             -- If the update failed, pass the request to the next handler (404).
             next
