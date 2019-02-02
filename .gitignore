@@ -7,4 +7,4 @@ cabal.sandbox.config
 *.swp
 *.keter
 .ghci
-data/*
+data
