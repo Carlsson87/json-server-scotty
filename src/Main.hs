@@ -4,6 +4,7 @@ import Web.Scotty
 import Data.Text.Lazy.Encoding
 import Data.Text.Lazy
 import JSONStore
+import Network.HTTP.Types.Status
 
 
 main :: IO ()
@@ -20,6 +21,7 @@ saveJsonDocumentHandler = do
     -- Create a JSON document with the given content, returns a key.
     key <- liftAndCatchIO (JSONStore.create content)
     -- Set the response body to text containing the key.
+    status status201
     text (pack key)
 
 

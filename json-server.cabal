@@ -14,3 +14,4 @@ executable          json-server
                   , text
                   , directory
                   , uuid
+                  , http-types
